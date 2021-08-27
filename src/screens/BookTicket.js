@@ -20,6 +20,7 @@ import Button from '../components/Button';
 import {useDispatch, connect} from 'react-redux';
 import {SET_SEAT_DETAILS} from '../action/action.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import shortId from 'shortid';
 
 const BookTicket = ({navigation, movieName}) => {
   const [selectedDay, setSelectedDay] = useState('TODAY');
@@ -49,28 +50,44 @@ const BookTicket = ({navigation, movieName}) => {
 
   const bookSeat = async () => {
     var currentDate = new Date();
-    const todayDate = currentDate.getDate();
+    const todayDate = currentDate.setDate(currentDate.getDate());
     const tommorowDate = currentDate.setDate(currentDate.getDate() + 1);
-    dispatch({
-      type: SET_SEAT_DETAILS,
-      payload: {
-        selectedSeat,
-        selectedTime,
-        selectedDay: selectedDay === 'TODAY' ? todayDate : tommorowDate,
-      },
-    });
+    const ticketId = shortId.generate();
     try {
-      const jsonValue = JSON.stringify({
+      dispatch({
+        type: SET_SEAT_DETAILS,
+        payload: {
+          movieName,
+          ticketId,
+          selectedSeat,
+          selectedTime,
+          selectedDay: selectedDay === 'TODAY' ? todayDate : tommorowDate,
+        },
+      });
+
+      const ticketToAdd = {
         movieName,
+        ticketId,
         selectedSeat,
         selectedTime,
         selectedDay: selectedDay === 'TODAY' ? todayDate : tommorowDate,
-      });
-      await AsyncStorage.setItem('@storage_Key', jsonValue);
-    } catch (e) {
-      console.log(e);
+      };
+
+      const storedValue = await AsyncStorage.getItem('@ticket_list');
+      const prevList = await JSON.parse(storedValue);
+
+      if (!prevList) {
+        const newList = [ticketToAdd];
+        await AsyncStorage.setItem('@ticket_list', JSON.stringify(newList));
+      } else {
+        prevList.push(ticketToAdd);
+        await AsyncStorage.setItem('@ticket_list', JSON.stringify(prevList));
+      }
+
+      navigation.navigate('SuccessfullyBooked');
+    } catch (error) {
+      console.log(error);
     }
-    navigation.navigate('SuccessfullyBooked');
   };
 
   return (
@@ -80,7 +97,7 @@ const BookTicket = ({navigation, movieName}) => {
           flex: 1,
           // backgroundColor: 'red',
         }}>
-        <Header headerTitle="SEAT BOOKING" />
+        <Header headerTitle="SEAT BOOKING" navigation={navigation} />
         <View style={{width: wp('100%'), alignItems: 'center'}}>
           <Image source={screen} />
         </View>

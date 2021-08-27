@@ -16,7 +16,9 @@ export const getNewReleasedMovies = () => async dispatch => {
       type: SET_NEW_RELEASED_MOVIES,
       payload: data.results,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getpopularMovies = () => async dispatch => {
@@ -27,7 +29,9 @@ export const getpopularMovies = () => async dispatch => {
       type: SET_POPULAR_MOVIES,
       payload: data.results,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getNowPlayingMovies = () => async dispatch => {
@@ -38,7 +42,9 @@ export const getNowPlayingMovies = () => async dispatch => {
       type: SET_NOW_PLAYING_MOVIES,
       payload: data.results,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getTopRatedMovies = () => async dispatch => {
@@ -49,5 +55,7 @@ export const getTopRatedMovies = () => async dispatch => {
       type: SET_TOP_RATED_MOVIES,
       payload: data.results,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };

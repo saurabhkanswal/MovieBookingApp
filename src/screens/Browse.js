@@ -50,10 +50,11 @@ const Browse = ({
         </SkeletonPlaceholder>
       ) : (
         <ScrollView horizontal={true}>
-          {newsState.topHeadline.map(item => (
+          {newsState.topHeadline.map((item, index) => (
             <Pressable
               style={styles.newsBannerOutside}
-              onPress={() => openLink({url: item.url})}>
+              onPress={() => openLink({url: item.url})}
+              key={index}>
               <ImageBackground
                 blurRadius={3}
                 style={styles.newsBanner}
@@ -90,7 +91,8 @@ const Browse = ({
             {newsState.trendingHeadlines.map((item, index) => (
               <Pressable
                 style={styles.trendingNews}
-                onPress={() => openLink({url: item.url})}>
+                onPress={() => openLink({url: item.url})}
+                key={index}>
                 <Image
                   source={{
                     uri:

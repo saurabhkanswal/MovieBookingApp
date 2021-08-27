@@ -9,6 +9,7 @@ import {
   Image,
   Pressable,
   FlatList,
+  StatusBar,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {
@@ -25,32 +26,36 @@ import {
   getTopRatedMovies,
 } from '../action/getMovies';
 //
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import MovieListContainer from '../components/MovieListContainer';
 // Screens
 // import MovieDetail from './MovieDetail';
-import {NavigationContainer} from '@react-navigation/native';
+import {SET_SELECTED_MOVIE} from '../action/action.types';
 
 const carouselItems = [
   {
-    id: 1,
+    id: 113131,
     image: 'http://pokerlogia.com/wp-content/uploads/joker-4.jpg',
+    title: 'Joker',
   },
   {
-    id: 2,
+    id: 2241,
     image:
       'https://theprimetime.in/wp-content/uploads/2020/12/The-first-look-poster-of-Sarpatta-Parambarai-released-768x432.jpg',
+    title: 'Sarpatta',
   },
   {
-    id: 3,
+    id: 31313,
     image:
       'https://sunraycinema.com/wp-content/uploads/2021/02/ddy7ptk-e2cbec0e-45df-4709-8f06-e5d3eca07b1c.png',
+    title: 'Godzilla vs Kong',
   },
   {
-    id: 4,
+    id: 44242,
     image:
       'https://cdn.mos.cms.futurecdn.net/wJ4s9FFL6FdxAoKixtr4FS-970-80.jpg.webp',
+    title: 'Tenet',
   },
 ];
 
@@ -63,38 +68,16 @@ const Home = ({
   navigation,
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
+
   const [activeSection, setActiveSection] = useState('POPULAR');
-  const [DATA, setDATA] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
   useEffect(async () => {
-    getNewReleasedMovies();
+    await getNewReleasedMovies();
     await getpopularMovies();
-    setDATA([...movieState.popularMovies]);
-    // setLoading(false);
+    await getNowPlayingMovies();
+    await getTopRatedMovies();
   }, []);
-
-  useEffect(async () => {
-    if (activeSection === 'NOW PLAYING') {
-      // setLoading(true);
-      if (movieState.nowPlayingMovies === null) {
-        await getNowPlayingMovies();
-      }
-      setDATA(movieState.nowPlayingMovies);
-      // setLoading(false);
-    } else if (activeSection === 'TOP RATED') {
-      // setLoading(true);
-      if (movieState.topRatedMovies === null) {
-        await getTopRatedMovies();
-      }
-
-      setDATA([...movieState.topRatedMovies]);
-      // setLoading(false);
-    } else {
-      // setLoading(true);
-      setDATA([...movieState.popularMovies]);
-      // setLoading(false);
-    }
-  }, [activeSection]);
 
   const renderCarousel = ({item, index}) => {
     return (
@@ -102,25 +85,33 @@ const Home = ({
         source={{uri: item.image}}
         resizeMode="contain"
         style={styles.Banneritem}>
-        <View style={styles.buyTicket}>
+        <Pressable
+          style={styles.buyTicket}
+          onPress={() => {
+            dispatch({
+              type: SET_SELECTED_MOVIE,
+              payload: {
+                movieName: item.title,
+              },
+            });
+            navigation.navigate('BookTicket');
+          }}>
           <Icons name="theaters" size={15} color="black" />
           <Text style={styles.buyTicketText}> BUY TICKET</Text>
-        </View>
+        </Pressable>
       </ImageBackground>
     );
   };
 
   const renderMovie = ({item}) => (
-    <View>
-      <MovieListContainer
-        title={item.title}
-        vote_average={item.vote_average}
-        release_date={item.release_date}
-        overView={item.overview}
-        poster_path={item.poster_path}
-        key={item.id}
-      />
-    </View>
+    <MovieListContainer
+      title={item.title}
+      vote_average={item.vote_average}
+      release_date={item.release_date}
+      overView={item.overview}
+      poster_path={item.poster_path}
+      key={item.id}
+    />
   );
 
   const changeSection = ({sectionName}) => {
@@ -131,10 +122,15 @@ const Home = ({
 
   return (
     <View style={styles.container}>
+      <StatusBar animated={true} backgroundColor="#181828" />
       <FlatList
-        data={DATA && DATA}
+        data={
+          (activeSection === 'NOW PLAYING' && movieState.nowPlayingMovies) ||
+          (activeSection === 'TOP RATED' && movieState.topRatedMovies) ||
+          (activeSection === 'POPULAR' && movieState.popularMovies)
+        }
         renderItem={renderMovie}
-        extraData={DATA}
+        extraData={activeSection}
         keyExtractor={item => item.id}
         ListHeaderComponent={
           <View>

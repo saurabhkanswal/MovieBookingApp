@@ -42,7 +42,7 @@ const MovieDetail = ({navigation, route, movieState}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Header headerTitle="TODAY'S SHOW" />
+        <Header headerTitle="TODAY'S SHOW" navigation={navigation} />
         <View style={{alignItems: 'center'}}>
           <View style={styles.containerTop}>
             <Pressable
@@ -120,7 +120,7 @@ const MovieDetail = ({navigation, route, movieState}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#262f3b',
+    backgroundColor: '#181828',
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',

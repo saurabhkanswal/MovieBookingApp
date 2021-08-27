@@ -26,7 +26,7 @@ const AllMovieList = ({movieState, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header headerTitle="Trending Movies" />
+      <Header headerTitle="Trending Movies" navigation={navigation} />
       <FlatList
         data={movieState.newReleasedMovies}
         renderItem={(item, index) => renderMovie(item, index)}

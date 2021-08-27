@@ -13,8 +13,25 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import LottieView from 'lottie-react-native';
+import {SET_TICKET_LIST} from '../action/action.types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
 
 const SuccessfullyBooked = ({navigation}) => {
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const dispatch = useDispatch();
+
+  const getData = async () => {
+    const storedValue = await AsyncStorage.getItem('@ticket_list');
+    const data = await JSON.parse(storedValue);
+    dispatch({
+      type: SET_TICKET_LIST,
+      payload: data,
+    });
+  };
   return (
     <View style={styles.container}>
       <View>

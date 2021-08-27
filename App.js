@@ -20,29 +20,30 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Browse from './src/screens/Browse';
 import Tickets from './src/screens/Tickets';
 import Home from './src/screens/Home';
-import Profile from './src/screens/Profile';
+// import Profile from './src/screens/Profile';
 import MovieDetail from './src/screens/MovieDetail';
 import BookTicket from './src/screens/BookTicket';
 import AllMovieList from './src/screens/AllMovieList';
 import SuccessfullyBooked from './src/screens/SuccessfullyBooked';
 // import NewsDetail from './src/screens/NewsDetail';
+import TicketReceipt from './src/screens/TicketReceipt';
 
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// function BrowseStack() {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//       }}>
-//       <Stack.Screen name="Browse" component={Browse} />
-//       <Stack.Screen name="NewsDetail" component={NewsDetail} />
-//     </Stack.Navigator>
-//   );
-// }
+function TicketStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Tickets" component={Tickets} />
+      <Stack.Screen name="TicketReceipt" component={TicketReceipt} />
+    </Stack.Navigator>
+  );
+}
 
 function HomeTabs() {
   return (
@@ -80,20 +81,11 @@ function HomeTabs() {
         })}
       />
       <Tab.Screen
-        name="Tickets"
-        component={Tickets}
+        name="TickeStack"
+        component={TicketStack}
         options={route => ({
           tabBarIcon: ({color}) => (
             <Icon name="theaters" size={35} color={color} />
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={route => ({
-          tabBarIcon: ({color}) => (
-            <Icon name="account-circle" size={35} color={color} />
           ),
         })}
       />
@@ -108,7 +100,7 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="HomeTabs" component={HomeTabs} />
         <Stack.Screen name="MovieDetail" component={MovieDetail} />
         <Stack.Screen name="BookTicket" component={BookTicket} />
         <Stack.Screen name="AllMovieList" component={AllMovieList} />

@@ -1,17 +1,20 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Pressable} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
-const Header = ({headerTitle}) => {
+const Header = ({headerTitle, navigation}) => {
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>
+      <Pressable
+        style={styles.iconContainer}
+        onPress={() => navigation.goBack()}>
         <Icons name="west" size={30} color="white" />
-      </View>
+      </Pressable>
       <View style={styles.headingContainer}>
         <Text style={styles.headerText}>{headerTitle}</Text>
       </View>
@@ -36,6 +39,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: wp('10%'),
     justifyContent: 'center',
+    // backgroundColor: 'red',
     // paddingLeft: 10,
   },
   headingContainer: {
